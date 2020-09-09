@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+}
+
+
+.autorization {
+  margin-top: 25vh;
+  margin-bottom: 25vh;
+}
+
+.registration {
+  margin-top: 25vh;
+  margin-bottom: 25vh;
+  margin-right: 20px;
+}
+
+.form-group > input {
+  margin-bottom: 5px;
+}
+
+form #error {
+  color: red;
+  font-size: 12px;
+}
+
+.result {
+  margin-top: 5px;
+}
+

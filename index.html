@@ -1,0 +1,66 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+  <title>Document</title>
+</head>
+
+<body>
+  <noscript>Для того чтобы отправить форму вам необходимо включить
+    JavaScript</noscript>
+
+  <div class="container">
+    <div class="row">
+      <!--Регистрация-->
+      <div class="col registration">
+        <h2>Регистрация</h2>
+        <form action="./form/registration.php" method="POST">
+          <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Введите email" required />
+            <div class="error_email" id="error"></div>
+            <input class="form-control" type="text" name="name" placeholder="Введите имя" required />
+            <div class="error_name" id="error"></div>
+            <input class="form-control" type="text" name="login" placeholder="Введите логин" required />
+            <div class="error_login" id="error"></div>
+            <input class="form-control" type="password" name="password" placeholder="Введите пароль" required />
+            <div class="error_password" id="error"></div>
+            <input class="form-control" type="password" name="confirm_password" placeholder="Поворите пароль" required />
+            <div class="error_confirm_password" id="error"></div>
+            <button class="btn btn-primary" data-dismiss="alert" aria-label="Close" type="submit" disabled>
+              Зарегистрироваться
+            </button>
+            <div class="result" role="alert"></div>
+          </div>
+        </form>
+      </div>
+      <!--Конец Регистрации-->
+
+      <!--Авторизация-->
+      <div class="col autorization">
+        <h2>Авторизация</h2>
+        <form action="./form/autorization.php" method="POST">
+          <div class="form-group">
+            <input class="form-control" type="text" name="login_aut" placeholder="Введите логин" required />
+
+            <input class="form-control" type="password" name="password_aut" placeholder="Введите пароль" required />
+            <div class="error_check" id="error"></div>
+            <button class="btn btn-primary" type="submit" disabled>
+              Авторизоваться
+            </button>
+          </div>
+        </form>
+      </div>
+      <!--Конец Авторизации-->
+    </div>
+  </div>
+
+  <script src="./js/jqury.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+
+</html>
