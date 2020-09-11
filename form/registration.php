@@ -29,7 +29,7 @@ if (!preg_match("/^[a-zA-Z0-9]{6,}$/", $login)) {
     $validation["ERROR_LOGIN_MESSAGE"] = "минимум 6 символов, только латинские буквы и цифры";
     $check = true;    
 }
-if (!preg_match("/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/i", $password)) {
+if (!preg_match("/(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
     $validation["ERROR_PASSWORD"] = "ERROR_PASSWORD";
     $validation["ERROR_PASSWORD_MESSAGE"] = "минимум 6 символов , обязательно должны содержать цифру, латинские буквы в разных регистрах и спец символ (знаки)";
     $check = true;

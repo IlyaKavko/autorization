@@ -42,8 +42,10 @@ $(document).ready(function () {
           $(".result").html(data["SUCCESS_MESSAGE"]);
           $(".result").addClass("alert alert-success");
           clearingInput();
-        } else if (data["ERROR_NOT_FOUND"]) {
-          $(".error_check").html(data["ERROR_NOT_FOUND_MESSAGE"]);
+        } else if (data["ERROR_LOGIN_NOT_FOUND"]) {
+          $(".error_login_check").html(data["ERROR_LOGIN_NOT_FOUND_MESSAGE"]);
+        } else if (data["ERROR_PASSWORD_NOT_FOUND"]) {
+          $(".error_password_check").html(data["ERROR_PASSWORD_NOT_FOUND_MESSAGE"]);
         } else if (data["SESSION_SUCCES"]) {
           $(".row").html(data["SESSION_SUCCES_MESSAGE"]);
         }

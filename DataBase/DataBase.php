@@ -5,8 +5,7 @@ class DataBase
 
     private $root;     // данная переменная хранит в себе путь к xml файлу
     private $node;     // данная переменная хранит в себе узел для работы с xml файлом
-    private $check;    // проверяет на успех авторизации
-    private $check_error;         // проверяет ошибки
+    private $check;    // проверка на ошибки и удачный вход
     private $succes = array();    // записывает в себя успех авторизации
     private $error = array();     // записывает в сябя ошибки 
 
@@ -29,19 +28,19 @@ class DataBase
             if ($resalt->login == $login) {
                 $this->error['ERROR_LOGIN_CHECK'] = 'ERROR_LOGIN_CHEK';
                 $this->error['ERROR_LOGIN_CHECK_MESSAGE'] = 'Пользователь с таким логином уже есть';
-                $this->check_error = true;
+                $this->check = true;
             }
             if ($resalt->email == $email) {
                 $this->error['ERROR_EMAIL_CHECK'] = 'ERROR_EMAIL_CHECK';
                 $this->error['ERROR_EMAIL_CHECK_MESSAGE'] = 'Пользователь с таким email уже есть';
-                $this->check_error = true;
+                $this->check = true;
             }
         }
 
-        if ($this->check_error) {       // если true отправляет json 
-            echo json_encode($this->error);
-            exit;
+        if ($this->check) {
+            $this->errors(); // выводит ошибки
         }
+
         // создает тег user в xml
         $this->node = $this->root->addChild('user');
 
@@ -55,7 +54,7 @@ class DataBase
         $this->root->asXML("../DataBase/users.xml");
     }
 
-    public function read($login, $password)   //данная функция служит для авторизации
+    public function read($login, $password)   //данная функция служит для проверки авторизации
     {
 
         function generateCode($length = 6)  // гениратор чисел для сессии
@@ -78,33 +77,50 @@ class DataBase
 
             foreach ($this->root->user as $user) {
 
-                if ($user->login == $login and $user->password == $password) {
-                    $hash = md5(generateCode(10));            // генирирую ключ для сессии
-                    $user->addChild('hash_inter', $hash);     // записывю ключ к пользователю который авторизовался
-                    $this->root->asXML("../DataBase/users.xml");    // сохраняю ключ в xml
-                    setcookie('name', $user->name, time() + 60 * 60 * 24 * 30);    // создаю куки и сессии
-                    setcookie('hash_inter', $user->hash_inter, time() + 60 * 60 * 24 * 30);
-                    $_SESSION['name'] = $_COOKIE['name'];
-                    $_SESSION['hash_inter'] = $_COOKIE['hash_inter'];
-
-                    $this->succes['SESSION_SUCCES'] = 'SESSION_SUCCES'; // формирую ответ json
-                    $this->succes['SESSION_SUCCES_MESSAGE'] = "<div class='alert alert-success' role='alert'>Добро пожаловать $user->name ! Чтобы выйти нажмите <a href='/form/exit.php' class='alert-link'>Выйти</a> </div>";
-                    $this->check = true;
+                if ($login == $user->login) { // проверяю логин на совпадение в DataBase
+                    unset($this->error);
+                    if ($password == $user->password) {   // если логин совподает проверяю пароль
+                        $hash = md5(generateCode(10));            // генирирую ключ для сессии
+                        $this->update($hash, $user->name);
+                    } else {
+                        $this->error['ERROR_PASSWORD_NOT_FOUND'] = 'ERROR_NOT_FOUND';
+                        $this->error['ERROR_PASSWORD_NOT_FOUND_MESSAGE'] = 'Неверный пароль';
+                        $this->check = true;
+                        $this->errors(); // вывод ошибки в пароле
+                    }
                 } else {
-                    $this->error['ERROR_NOT_FOUND'] = 'ERROR_NOT_FOUND';
-                    $this->error['ERROR_NOT_FOUND_MESSAGE'] = 'Неверный логин или пароль';
-                    $this->check_error = true;
+                    $this->error['ERROR_LOGIN_NOT_FOUND'] = 'ERROR_NOT_FOUND';
+                    $this->error['ERROR_LOGIN_NOT_FOUND_MESSAGE'] = 'Неверный логин';
+                    $this->error['login'] = $login;
+                    $this->check = true;
                 }
+            }
+            if ($this->check) {
+                $this->errors(); // выводит ошибки
+            }
+        }
+    }
+
+    // если пароль и логин совпадают то коректирую пользователя который авторизовался добавляя ему ключ сессии
+    private function update($hash, $userName)
+    {
+        foreach ($this->root->user as $user) {
+            if ($user->name == $userName) {
+                $user->addChild('hash_inter', $hash);     // записывю ключ к пользователю который авторизовался
+                $this->root->asXML("../DataBase/users.xml");    // сохраняю ключ в xml
+                setcookie('name', $user->name, time() + 60 * 60 * 24 * 30);    // создаю куки и сессии
+                setcookie('hash_inter', $user->hash_inter, time() + 60 * 60 * 24 * 30);
+                $_SESSION['name'] = $_COOKIE['name'];
+                $_SESSION['hash_inter'] = $_COOKIE['hash_inter'];
+
+                $this->succes['SESSION_SUCCES'] = 'SESSION_SUCCES'; // формирую ответ json
+                $this->succes['SESSION_SUCCES_MESSAGE'] = "<div class='alert alert-success' role='alert'>Добро пожаловать $user->name ! Чтобы выйти нажмите <a href='/form/exit.php' class='alert-link'>Выйти</a> </div>";
+                $this->check = true;
             }
         }
         // ответ для успешной авторизации
         if ($this->check) {
             echo json_encode($this->succes);
-            exit;
-        }
-        // ответ на ошибки
-        if ($this->check_error) {
-            echo json_encode($this->error);
             exit;
         }
     }
@@ -121,5 +137,12 @@ class DataBase
         }
         $users = $doc->saveXML();
         $doc->save('../DataBase/users.xml');
+    }
+
+    public function errors()
+    {
+        echo json_encode($this->error);
+        session_destroy();
+        exit;
     }
 }
