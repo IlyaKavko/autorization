@@ -16,20 +16,20 @@ $validation = array();  // данная переменая записывает 
 if (filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
     $validation["ERROR_EMAIL"] = "ERROR_EMAIL";
     $validation["ERROR_EMAIL_MESAGE"] = "Введите коректный Email";
-    $check = true;    
+    $check = true;
 };
 
 if (!preg_match("/^[a-zA-Z][a-zA-Z0-9]{1,20}$/", $name)) {
     $validation["ERROR_NAME"] = "ERROR_NAME";
     $validation["ERROR_NAME_MESSAGE"] = "минимум 2 символа, только латинские буквы и цифры";
-    $check = true;    
+    $check = true;
 }
 if (!preg_match("/^[a-zA-Z0-9]{6,}$/", $login)) {
     $validation["ERROR_LOGIN"] = "ERROR_LOGIN";
     $validation["ERROR_LOGIN_MESSAGE"] = "минимум 6 символов, только латинские буквы и цифры";
-    $check = true;    
+    $check = true;
 }
-if (!preg_match("/(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/", $password)) {
+if (!preg_match("/^(?=.*[0-9])(?=.*[!@#$%^&*()~¥=_+}{:;'?>.<,'\-\|])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()~¥=_+}{:;'?>.<,'\-\|]{6,}$/i", $password)) {
     $validation["ERROR_PASSWORD"] = "ERROR_PASSWORD";
     $validation["ERROR_PASSWORD_MESSAGE"] = "минимум 6 символов , обязательно должны содержать цифру, латинские буквы в разных регистрах и спец символ (знаки)";
     $check = true;
@@ -37,7 +37,7 @@ if (!preg_match("/(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z])
 if ($password !== $repete_password) {
     $validation["ERROR_CONFIRM_PASSWORD"] = "ERROR_CONFIRM_PASSWORD";
     $validation["ERROR_CONFIRM_PASSWORD_MESSAGE"] = "Пароли не совпадают";
-    $check = true;   
+    $check = true;
 }
 
 if ($check) {       // если true значит есть ошибки
