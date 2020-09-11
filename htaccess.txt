@@ -1,0 +1,6 @@
+<Files "*.xml">
+  deny from all
+</Files>
+<Files DataBase.php>
+  deny from all
+</Files>
