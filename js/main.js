@@ -49,6 +49,7 @@ $(document).ready(function () {
         } else if (data["SESSION_SUCCES"]) {
           $(".row").html(data["SESSION_SUCCES_MESSAGE"]);
         }
+        console.log(data);
       },
     });
   });
@@ -56,9 +57,9 @@ $(document).ready(function () {
   // функция для очистки input
   function clearingInput() {
     $(".form-group")
-      .children("#error")
+      .children("input")
       .each(function () {
-        $("input").val("");
+        $(this).val("");
       });
   }
 });

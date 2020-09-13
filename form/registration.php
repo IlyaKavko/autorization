@@ -15,7 +15,7 @@ $validation = array();  // данная переменая записывает 
 
 if (filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
     $validation["ERROR_EMAIL"] = "ERROR_EMAIL";
-    $validation["ERROR_EMAIL_MESAGE"] = "Введите коректный Email";
+    $validation["ERROR_EMAIL_MESSAGE"] = "Введите коректный Email";
     $check = true;
 };
 
